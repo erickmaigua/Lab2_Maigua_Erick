@@ -1,16 +1,16 @@
 package controller;
 
 import javax.swing.JTextArea;
-import java.util.Stack;
+import model.StackCustom;
 
 public class NotationConverter {
 
-    // Verifica si un caracter es un operador
+    // Verifica si un caracter es operador
     public static boolean isOperator(char c) {
         return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
     }
 
-    // Prioridad de operadores en la expresión infija
+    // Prioridad en la expresión infija
     public static int infixPriority(char op) {
         switch (op) {
             case '^': return 4;
@@ -21,7 +21,7 @@ public class NotationConverter {
         }
     }
 
-    // Prioridad de operadores cuando están en la pila
+    // Prioridad de operadores en la pila
     public static int stackPriority(char op) {
         switch (op) {
             case '^': return 3;
@@ -32,7 +32,7 @@ public class NotationConverter {
         }
     }
 
-    // Realiza la operación entre dos números
+    // Operación entre dos números
     public static double operate(double a, char op, double b) {
         switch (op) {
             case '+': return a + b;
@@ -44,10 +44,10 @@ public class NotationConverter {
         }
     }
 
-    // Convierte expresión infija a postfija
+    // Convierte expresión infija a postfija usando StackCustom
     public static String infixToPostfix(String expression) {
         StringBuilder output = new StringBuilder();
-        Stack<Character> stack = new Stack<>();
+        StackCustom<Character> stack = new StackCustom<>();
 
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
@@ -76,10 +76,10 @@ public class NotationConverter {
         return output.toString();
     }
 
-    // Convierte expresión infija a prefija
+    // Convierte expresión infija a prefija usando StackCustom
     public static String infixToPrefix(String expression) {
         StringBuilder output = new StringBuilder();
-        Stack<Character> stack = new Stack<>();
+        StackCustom<Character> stack = new StackCustom<>();
         expression = new StringBuilder(expression).reverse().toString();
 
         for (int i = 0; i < expression.length(); i++) {
@@ -93,7 +93,7 @@ public class NotationConverter {
                 while (!stack.isEmpty() && stack.peek() != ')') {
                     output.append(stack.pop());
                 }
-                stack.pop(); // elimina ')'
+                stack.pop();
             } else if (isOperator(c)) {
                 while (!stack.isEmpty() && stackPriority(stack.peek()) > infixPriority(c)) {
                     output.append(stack.pop());
@@ -111,7 +111,7 @@ public class NotationConverter {
 
     // Evalúa la expresión postfija paso a paso y la muestra en JTextArea
     public static double evaluatePostfixStepByStep(String expression, JTextArea textArea) {
-        Stack<Double> stack = new Stack<>();
+        StackCustom<Double> stack = new StackCustom<>();
         textArea.append("Evaluación paso a paso:\n");
 
         for (int i = 0; i < expression.length(); i++) {
