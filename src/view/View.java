@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import controller.NotationConverter; // Asegúrate de tener esta clase en tu proyecto
+import controller.NotationConverter;
 
 public class View extends JFrame {
 
@@ -17,9 +17,6 @@ public class View extends JFrame {
     private JTextArea taResultados;
     private JButton btnPostfija, btnPrefija, btnEvaluar;
 
-    /**
-     * Inicia la aplicación
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -31,18 +28,14 @@ public class View extends JFrame {
         });
     }
 
-    /**
-     * Crea la ventana
-     */
     public View() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 600, 400);
+        setBounds(100, 100, 791, 400);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(new BorderLayout(10, 10));
         setContentPane(contentPane);
 
-        // Panel superior con JTextField y botones
         JPanel panelSuperior = new JPanel();
         tfExpresion = new JTextField(25);
         btnPostfija = new JButton("Convertir a Postfija");
@@ -57,12 +50,10 @@ public class View extends JFrame {
 
         contentPane.add(panelSuperior, BorderLayout.NORTH);
 
-        // Área de resultados
         taResultados = new JTextArea();
         taResultados.setEditable(false);
         contentPane.add(new JScrollPane(taResultados), BorderLayout.CENTER);
 
-        // Eventos de los botones
         btnPostfija.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
