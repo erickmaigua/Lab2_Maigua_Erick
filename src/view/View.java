@@ -2,12 +2,9 @@ package view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import controller.NotationConverter;
+import controller.NotationController;
 
 public class View extends JFrame {
 
@@ -17,25 +14,19 @@ public class View extends JFrame {
     private JTextArea taResultados;
     private JButton btnPostfija, btnPrefija, btnEvaluar;
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                View frame = new View();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    private NotationController controller = new NotationController();
 
     public View() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 791, 400);
+        setBounds(100, 100, 806, 420);
+        setTitle("Conversor de Notación (Infija - Postfija - Prefija)");
+
         contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
         contentPane.setLayout(new BorderLayout(10, 10));
         setContentPane(contentPane);
 
+        // Panel superior
         JPanel panelSuperior = new JPanel();
         tfExpresion = new JTextField(25);
         btnPostfija = new JButton("Convertir a Postfija");
@@ -47,40 +38,38 @@ public class View extends JFrame {
         panelSuperior.add(btnPostfija);
         panelSuperior.add(btnPrefija);
         panelSuperior.add(btnEvaluar);
-
         contentPane.add(panelSuperior, BorderLayout.NORTH);
 
+        // Área de resultados
         taResultados = new JTextArea();
         taResultados.setEditable(false);
+        taResultados.setFont(new Font("Monospaced", Font.PLAIN, 14));
         contentPane.add(new JScrollPane(taResultados), BorderLayout.CENTER);
 
-        btnPostfija.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String infija = tfExpresion.getText();
-                String postfija = NotationConverter.infixToPostfix(infija);
-                taResultados.setText("Expresión Postfija: " + postfija + "\n");
-            }
-        });
+        // Eventos
+        btnPostfija.addActionListener(this::accionConvertirPostfija);
+        btnPrefija.addActionListener(this::accionConvertirPrefija);
+        btnEvaluar.addActionListener(this::accionEvaluarPostfija);
+    }
 
-        btnPrefija.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String infija = tfExpresion.getText();
-                String prefija = NotationConverter.infixToPrefix(infija);
-                taResultados.setText("Expresión Prefija: " + prefija + "\n");
-            }
-        });
+    // Evento: convertir a postfija
+    private void accionConvertirPostfija(ActionEvent e) {
+        String infija = tfExpresion.getText().trim();
+        String resultado = controller.convertirAPostfija(infija);
+        taResultados.setText(resultado);
+    }
 
-        btnEvaluar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String infija = tfExpresion.getText();
-                String postfija = NotationConverter.infixToPostfix(infija);
-                taResultados.setText("Expresión Postfija: " + postfija + "\n\nEvaluación paso a paso:\n");
-                double resultado = NotationConverter.evaluatePostfixStepByStep(postfija, taResultados);
-                taResultados.append("\nResultado final: " + resultado);
-            }
-        });
+    // Evento: convertir a prefija
+    private void accionConvertirPrefija(ActionEvent e) {
+        String infija = tfExpresion.getText().trim();
+        String resultado = controller.convertirAPrefija(infija);
+        taResultados.setText(resultado);
+    }
+
+    // Evento: evaluar postfija
+    private void accionEvaluarPostfija(ActionEvent e) {
+        String infija = tfExpresion.getText().trim();
+        String resultado = controller.evaluarPostfija(infija);
+        taResultados.setText(resultado);
     }
 }
